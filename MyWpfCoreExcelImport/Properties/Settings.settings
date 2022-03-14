@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="MyWpfCoreExcelImport.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ConnectionString" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Server = localhost; Database = TestDB; Trusted_Connection = true</Value>
+    </Setting>
+    <Setting Name="ExcelFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">..\\..\\..\\..\\TestData\\TestData.xlsx</Value>
+    </Setting>
+    <Setting Name="TableName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">TestTable</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

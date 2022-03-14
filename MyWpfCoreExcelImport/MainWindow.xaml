@@ -1,0 +1,36 @@
+﻿<Window x:Class="MyWpfCoreExcelImport.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:p="clr-namespace:MyWpfCoreExcelImport.Properties"
+        xmlns:local="clr-namespace:MyWpfCoreExcelImport"
+        xmlns:tools="clr-namespace:MyWpfCoreExcelImport.Tools"
+        tools:WindowsSettings.Save="True"         
+        mc:Ignorable="d"
+        Title="MyWpfCoreExcelImport MainWindow" Height="450" Width="800" Loaded="Window_Loaded" Closing="Window_Closing">
+    <Grid>
+        <Rectangle Fill="#FF5D5D5D" Height="48" Stroke="Black" VerticalAlignment="Top" Margin="10,10,9.6,0" Grid.ColumnSpan="2"/>
+        <Label Content="Messages click to clear" HorizontalContentAlignment="Center"	 VerticalAlignment="Top" Margin="32,19,34,0" FontSize="14.667" FontWeight="Bold" FontFamily="Segoe WP Black" Opacity="0.4" Height="29"/>
+        <Label Content="{Binding Message}" ToolTip="Click to clear" VerticalAlignment="Top" Margin="20,19,21,0" Height="29" Background="#FF7A7A7A" MouseDown="Lable_Message_MouseDown" Opacity="0.745" FontWeight="Bold"/>
+
+        <Label Content="Connection String" HorizontalAlignment="Left" Margin="10,63,0,0" VerticalAlignment="Top"/>
+        <TextBox Text="{Binding ConnectionString, Source={x:Static p:Settings.Default}}" Margin="120,67,90,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <Button Content="Connect" Margin="0,65,10,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Click="Button_Connect_Click"/>
+        <Label Content="Excel-File" HorizontalAlignment="Left" Margin="10,88,0,0" VerticalAlignment="Top"/>
+
+        <TextBox Text="{Binding ExcelFile, Source={x:Static p:Settings.Default}}" Margin="120,92,90,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <Button Content="..." Margin="0,90,10,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Click="Button_SetExcelFile_Click"/>
+
+        <Label Content="Table Name" HorizontalAlignment="Left" Margin="10,111,0,0" VerticalAlignment="Top"/>
+        <TextBox Text="{Binding TableName, Source={x:Static p:Settings.Default}}" Margin="120,115,0,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="89"/>
+        <CheckBox Content="Show SQL Help Window" IsChecked="{Binding ShowSQLHelpWindow}" ToolTip="Shows a tool window in which the appropriate SQL CREATE TABLE statement is given" ToolTipService.ShowDuration="0x7FFFFFFF"  HorizontalAlignment="Right" Margin="0,117,14,0" VerticalAlignment="Top"/>
+
+        <DataGrid Name="myDataGrid" ItemsSource="{Binding}" Margin="10,142,90,10"/>
+
+        <Button Content="Import" HorizontalAlignment="Right" Margin="0,0,10,85" VerticalAlignment="Bottom" Width="75" Click="Button_Import_Click"/>
+        <Button Content="Updated DB" HorizontalAlignment="Right" Margin="0,0,10,60" VerticalAlignment="Bottom" Width="75" Click="Button_UpdatedDB_Click"/>
+        <Button Content="Clear" HorizontalAlignment="Right" Margin="0,0,10,35" VerticalAlignment="Bottom" Width="75" Click="Button_Clear_Click"/>
+        <Button Content="Close" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="75" Click="Button_Close_Click"/>
+    </Grid>
+</Window>
