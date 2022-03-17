@@ -240,6 +240,7 @@ namespace MyWpfCoreExcelImport
 
             try
             {
+                p.DBName = GetDBName(p.ConnectionString);
                 Connection = new SqlConnection(p.ConnectionString);
                 Connection.Open();
                 Console.Beep();
@@ -252,6 +253,22 @@ namespace MyWpfCoreExcelImport
                 Message = $"Connection to: {Connection!.ConnectionString}  - failed";
                 MessageBox.Show(ex.Message, Title, MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        /// <summary>
+        /// GetDBName
+        /// </summary>
+        /// <param name="connectionString"></param>
+        /// <returns></returns>
+        private string GetDBName(string connectionString)
+        {
+            string dBName = "";
+
+            var sCStrring = new System.Data.SqlClient.SqlConnectionStringBuilder(connectionString);
+
+            dBName = sCStrring.InitialCatalog;
+
+            return dBName;
         }
 
         /// <summary>
@@ -268,7 +285,10 @@ namespace MyWpfCoreExcelImport
         /// <returns></returns>
         private DataSet ReadExcelFile(string filePath, ExcelReaderConfiguration readerConfiguration = null, ExcelDataSetConfiguration dataSetConfiguration = null)
         {
+            var p = Properties.Settings.Default;
             DataSet result;
+
+            p.DBName = GetDBName(p.ConnectionString);
             using FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read);
             using IExcelDataReader reader = ExcelReaderFactory.CreateReader(stream, readerConfiguration);
             result = reader.AsDataSet(dataSetConfiguration);
@@ -350,11 +370,13 @@ namespace MyWpfCoreExcelImport
         /// <returns></returns>
         public string CreateTABLE(DataTable table)
         {
+            var p = Properties.Settings.Default;
             string sqlsc;
-            sqlsc = "--CREATE DATABASE TestDB;\n";
-            sqlsc += "--DROP DATABASE TestDB;\n";
-            sqlsc += $"--DROP TABLE TestDB.dbo.{table.TableName};\n";
-            sqlsc += $"CREATE TABLE TestDB.dbo.{table.TableName} (";
+            sqlsc = $"--CREATE DATABASE {p.DBName};\n";
+            sqlsc += $"--USE master; ALTER DATABASE {p.DBName} SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE {p.DBName};\n";
+            sqlsc += $"USE {p.DBName};\n";
+            sqlsc += $"DROP TABLE IF EXISTS {p.DBName}.{table.TableName};\n";
+            sqlsc += $"CREATE TABLE {table.TableName} (";
             for (int i = 0; i < table.Columns.Count; i++)
             {
                 sqlsc += "\n [" + table.Columns[i].ColumnName + "] ";
@@ -391,7 +413,7 @@ namespace MyWpfCoreExcelImport
                 sqlsc += ",";                
             }
             sqlsc += "\n);\n";
-            sqlsc += $"SELECT * FROM TestDB.dbo.{table.TableName};\n";
+            sqlsc += $"SELECT * FROM {table.TableName};\n";
             return sqlsc;
         }
 

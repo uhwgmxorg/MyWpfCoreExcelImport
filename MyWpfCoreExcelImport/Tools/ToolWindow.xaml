@@ -8,6 +8,11 @@
         Title="ToolWindow" Height="220" Width="400" Closing="Window_Closing">
     <Grid>
         <TextBox Text="{Binding CreateTableStatment}" IsEnabled="True" IsReadOnly="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" TextWrapping="NoWrap" Margin="10,10,10,30" FontSize="11" FontFamily="Curier"/>
+        <Button ToolTip="Copy Create Table Statment to Clipboard" ToolTipService.ShowDuration="0x7FFFFFFF" HorizontalAlignment="Left" Margin="10,0,0,3" Click="Button_CopyCreateTableStatment_Click" Width="24" Height="24" VerticalAlignment="Bottom" >
+            <StackPanel>
+                <Image Source="pack://application:,,,/Resource/copy.png" />
+            </StackPanel>
+        </Button>
         <Button Content="Close" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="44" Height="15" Click="Button_Click_Close" FontSize="9"/>
     </Grid>
 </Window>

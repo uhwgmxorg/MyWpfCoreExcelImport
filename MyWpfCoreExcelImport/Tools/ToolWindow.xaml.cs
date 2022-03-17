@@ -37,6 +37,25 @@ namespace MyWpfCoreExcelImport.Tools
         #region Button Events
 
         /// <summary>
+        /// Button_CopyPrivateKey_Click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_CopyCreateTableStatment_Click(object sender, RoutedEventArgs e)
+        {
+            var p = Properties.Settings.Default;
+
+            try
+            {
+                Clipboard.SetDataObject(CreateTableStatment);
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show($"Exception: {ex.Message}", System.Reflection.Assembly.GetExecutingAssembly().GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
         /// Button_Click_Close
         /// </summary>
         /// <param name="sender"></param>

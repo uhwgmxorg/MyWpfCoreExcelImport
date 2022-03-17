@@ -6,7 +6,22 @@
     <Nullable>disable</Nullable>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resource\copy.png" />
+    <None Remove="Resource\eraser.png" />
+    <None Remove="Resource\history.png" />
+    <None Remove="Resource\paste.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resource\copy.png" />
+    <Resource Include="Resource\eraser.png" />
+    <Resource Include="Resource\history.png" />
+    <Resource Include="Resource\paste.png" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />

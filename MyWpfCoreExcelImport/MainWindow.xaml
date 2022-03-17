@@ -22,8 +22,15 @@
         <TextBox Text="{Binding ExcelFile, Source={x:Static p:Settings.Default}}" Margin="120,92,90,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <Button Content="..." Margin="0,90,10,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Click="Button_SetExcelFile_Click"/>
 
-        <Label Content="Table Name" HorizontalAlignment="Left" Margin="10,111,0,0" VerticalAlignment="Top"/>
-        <TextBox Text="{Binding TableName, Source={x:Static p:Settings.Default}}" Margin="120,115,0,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="89"/>
+        <Label Content="DBName" HorizontalAlignment="Left" Margin="12,112,0,0" VerticalAlignment="Top"/>
+        <TextBox Text="{Binding DBName, Source={x:Static p:Settings.Default}}" Margin="120,117,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="139"/>
+
+        <Label Content="Table Name" HorizontalAlignment="Left" Margin="264,110,0,0" VerticalAlignment="Top"/>
+        <TextBox Text="{Binding TableName, Source={x:Static p:Settings.Default}}" Margin="341,115,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="139"/>
+
+        <Label Content="Excel Tab Index" HorizontalAlignment="Left" Margin="485,110,0,0" VerticalAlignment="Top"/>
+        <TextBox Text="{Binding ExcelTabIndex, Source={x:Static p:Settings.Default}}" Margin="580,114,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="34"/>
+
         <CheckBox Content="Show SQL Help Window" IsChecked="{Binding ShowSQLHelpWindow}" ToolTip="Shows a tool window in which the appropriate SQL CREATE TABLE statement is given" ToolTipService.ShowDuration="0x7FFFFFFF"  HorizontalAlignment="Right" Margin="0,117,14,0" VerticalAlignment="Top"/>
 
         <DataGrid Name="myDataGrid" ItemsSource="{Binding}" Margin="10,142,90,10"/>
