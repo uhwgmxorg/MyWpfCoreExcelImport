@@ -132,13 +132,22 @@ namespace MyWpfCoreExcelImport
             try
             {
                 if (_ds != null)
-                    UploadDataSet(_ds);
+                {
+                    if(!UploadDataSet(_ds))
+                    {
+                        Console.Beep();
+                        Console.Beep();
+                        Message = $"Database update fail";
+                        MessageBox.Show($"Data has not yet been imported !!", Title, MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+                }
                 else
                 {
                     Console.Beep();
                     Console.Beep();
-                    Message = $"Database updat fail";
-                    MessageBox.Show($"Data has not yet been imported, ds == null", Title, MessageBoxButton.OK, MessageBoxImage.Error);
+                    Message = $"Database update fail";
+                    MessageBox.Show($"Data has not yet been imported, ds == null !!", Title, MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
             }
@@ -375,7 +384,7 @@ namespace MyWpfCoreExcelImport
             sqlsc = $"--CREATE DATABASE {p.DBName};\n";
             sqlsc += $"--USE master; ALTER DATABASE {p.DBName} SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE {p.DBName};\n";
             sqlsc += $"USE {p.DBName};\n";
-            sqlsc += $"DROP TABLE IF EXISTS {p.DBName}.{table.TableName};\n";
+            sqlsc += $"DROP TABLE IF EXISTS {table.TableName};\n";
             sqlsc += $"CREATE TABLE {table.TableName} (";
             for (int i = 0; i < table.Columns.Count; i++)
             {
