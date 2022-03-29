@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MyWpfCoreExcelImport.Tools"
         mc:Ignorable="d"
-        Title="ToolWindow" Height="220" Width="400" Closing="Window_Closing">
+        Title="ToolWindow" Height="220" Width="400" Closing="Window_Closing" IsVisibleChanged="Window_IsVisibleChanged">
     <Grid>
         <TextBox Text="{Binding CreateTableStatment}" IsEnabled="True" IsReadOnly="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" TextWrapping="NoWrap" Margin="10,10,10,30" FontSize="11" FontFamily="Curier"/>
         <Button ToolTip="Copy Create Table Statment to Clipboard" ToolTipService.ShowDuration="0x7FFFFFFF" HorizontalAlignment="Left" Margin="10,0,0,3" Click="Button_CopyCreateTableStatment_Click" Width="24" Height="24" VerticalAlignment="Bottom" >

@@ -9,6 +9,7 @@ namespace MyWpfCoreExcelImport.Tools
     /// </summary>
     public partial class ToolWindow : Window, INotifyPropertyChanged
     {
+        public event MainWindow.VisibilityChangeEvent VisibilityChange;
         public event PropertyChangedEventHandler PropertyChanged;
 
         #region INotify Changed Properties  
@@ -76,6 +77,16 @@ namespace MyWpfCoreExcelImport.Tools
         /*      Other Events          */
         /******************************/
         #region Other Events
+
+        /// <summary>
+        /// Window_IsVisibleChanged
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Window_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            VisibilityChange?.Invoke(this, new ChangeEventArgs(IsVisible));
+        }
 
         /// <summary>
         /// Window_Closing

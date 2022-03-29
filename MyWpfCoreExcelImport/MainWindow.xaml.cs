@@ -17,8 +17,10 @@ namespace MyWpfCoreExcelImport
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        public delegate void VisibilityChangeEvent(object sender, ChangeEventArgs e);
         public event PropertyChangedEventHandler PropertyChanged;
 
+        VisibilityChangeEvent _visibilityChangeEvent;
         private Tools.ToolWindow _toolWindow;
 
         #region INotify Changed Properties  
@@ -63,6 +65,8 @@ namespace MyWpfCoreExcelImport
 #endif
             // Necessary for ExcelDataReader and .Net Core
             Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+            _visibilityChangeEvent = new VisibilityChangeEvent(VisibilityChangeEventHandler);
         }
 
         /******************************/
@@ -106,8 +110,11 @@ namespace MyWpfCoreExcelImport
             try
             {
                 DataSet ds = ReadExcelFile(excelFile);
-                _ds = PrepareDataSetForImport(ds);
+                _ds = ds;
                 myDataGrid.DataContext = _ds.Tables[0];
+                String createTableStatment = CreateTABLE(ds.Tables[0]);
+                _toolWindow!.CreateTableStatment = createTableStatment;
+                Debug.WriteLine(createTableStatment);
             }
             catch (Exception ex)
             {
@@ -208,7 +215,10 @@ namespace MyWpfCoreExcelImport
         {
             ConnectToDB();
             if (_toolWindow == null)
+            {
                 _toolWindow = CreateToolWindow();
+                _toolWindow.VisibilityChange += _visibilityChangeEvent;
+            }
         }
 
         /// <summary>
@@ -220,6 +230,17 @@ namespace MyWpfCoreExcelImport
         private void Lable_Message_MouseDown(object sender, MouseButtonEventArgs e)
         {
             Message = "";
+        }
+
+        /// <summary>
+        /// VisibilityChangeEventHandler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void VisibilityChangeEventHandler(object sender, ChangeEventArgs e)
+        {
+            ShowSQLHelpWindow = e.IsVisible;
+            Debug.WriteLine($"VisibilityChangeEventHandler {e.IsVisible}");
         }
 
         /// <summary>
@@ -297,6 +318,29 @@ namespace MyWpfCoreExcelImport
             var p = Properties.Settings.Default;
             DataSet result;
 
+            dataSetConfiguration = new ExcelDataSetConfiguration()
+            {
+                // Gets or sets a value indicating whether to set the DataColumn.DataType 
+                // property in a second pass.
+                UseColumnDataType = true,
+
+                // Gets or sets a callback to determine whether to include the current sheet
+                // in the DataSet. Called once per sheet before ConfigureDataTable.
+                FilterSheet = (tableReader, sheetIndex) => true,
+
+                // Gets or sets a callback to obtain configuration options for a DataTable. 
+                ConfigureDataTable = (tableReader) => new ExcelDataTableConfiguration()
+                {
+                    // Gets or sets a value indicating the prefix of generated column names.
+                    EmptyColumnNamePrefix = "Column",
+
+                    // Gets or sets a value indicating whether to use a row from the 
+                    // data as column names.
+                    UseHeaderRow = true,
+                }
+            };
+
+
             p.DBName = GetDBName(p.ConnectionString);
             using FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read);
             using IExcelDataReader reader = ExcelReaderFactory.CreateReader(stream, readerConfiguration);
@@ -332,44 +376,6 @@ namespace MyWpfCoreExcelImport
         }
 
         /// <summary>
-        /// PrepareDataSetForImport
-        /// This function operates on the data set in such a way that the 
-        /// first row becomes the column names of the data tables and then 
-        /// the 1 row is removed
-        /// </summary>
-        /// <returns></returns>
-        private DataSet PrepareDataSetForImport(DataSet ds)
-        {
-            DataSet pds = ds;
-
-            try
-            {
-                for (int i = 0; i < ds.Tables.Count; i++)
-                {
-                    for (int j = 0; j < ds.Tables[i].Columns.Count; j++)
-                    {
-                        DataColumn c = ds.Tables[i].Columns[j];
-                        var r = pds.Tables[i].Rows[0];
-                        c.ColumnName = r.ItemArray[j].ToString();
-                    }
-                    ds.Tables[i].Rows.RemoveAt(0);
-
-                    ds.Tables[0].TableName = Properties.Settings.Default.TableName;
-                    String createTableStatment = CreateTABLE(ds.Tables[0]);
-                    _toolWindow!.CreateTableStatment = createTableStatment;
-                    Debug.WriteLine(createTableStatment);
-                }
-            }
-            catch (Exception ex)
-            {
-                Message = ex.Message;
-                Debug.WriteLine(ex.ToString());
-            }
-
-            return pds;
-        }
-
-        /// <summary>
         /// CreateTABLE
         /// From:
         /// https://stackoverflow.com/questions/1348712/creating-a-sql-server-table-from-a-c-sharp-datatable
@@ -378,9 +384,11 @@ namespace MyWpfCoreExcelImport
         /// <param name="table"></param>
         /// <returns></returns>
         public string CreateTABLE(DataTable table)
+
         {
             var p = Properties.Settings.Default;
             string sqlsc;
+
             sqlsc = $"--CREATE DATABASE {p.DBName};\n";
             sqlsc += $"--USE master; ALTER DATABASE {p.DBName} SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE {p.DBName};\n";
             sqlsc += $"USE {p.DBName};\n";
@@ -392,37 +400,44 @@ namespace MyWpfCoreExcelImport
                 string columnType = table.Columns[i].DataType.ToString();
                 switch (columnType)
                 {
-                    case "System.Int32":
-                        sqlsc += " int ";
-                        break;
-                    case "System.Int64":
-                        sqlsc += " bigint ";
-                        break;
-                    case "System.Int16":
-                        sqlsc += " smallint";
-                        break;
-                    case "System.Byte":
-                        sqlsc += " tinyint";
+                    case "System.Double":
+                        if (table.Columns[i].ColumnName.ToLower() == "id")
+                            sqlsc += " Int";
+                        else
+                            sqlsc += " Real";
                         break;
                     case "System.Decimal":
-                        sqlsc += " decimal ";
+                        sqlsc += " Real";
+                        break;
+                    case "System.Int32":
+                        sqlsc += " Int";
+                        break;
+                    case "System.Int64":
+                        sqlsc += " Bigint";
+                        break;
+                    case "System.Int16":
+                        sqlsc += " Smallint";
+                        break;
+                    case "System.Byte":
+                        sqlsc += " Tinyint";
                         break;
                     case "System.DateTime":
-                        sqlsc += " datetime ";
+                        sqlsc += " Datetime";
                         break;
                     case "System.String":
                     default:
-                        sqlsc += string.Format(" nvarchar({0}) ", table.Columns[i].MaxLength == -1 ? "max" : table.Columns[i].MaxLength.ToString());
+                        sqlsc += string.Format(" Nvarchar({0})", table.Columns[i].MaxLength == -1 ? "max" : table.Columns[i].MaxLength.ToString());
                         break;
                 }
                 if (table.Columns[i].AutoIncrement)
                     sqlsc += " IDENTITY(" + table.Columns[i].AutoIncrementSeed.ToString() + "," + table.Columns[i].AutoIncrementStep.ToString() + ") ";
                 if (!table.Columns[i].AllowDBNull)
                     sqlsc += " NOT NULL ";
-                sqlsc += ",";                
+                sqlsc += ",";
             }
             sqlsc += "\n);\n";
             sqlsc += $"SELECT * FROM {table.TableName};\n";
+
             return sqlsc;
         }
 
@@ -499,5 +514,19 @@ namespace MyWpfCoreExcelImport
         }
 
         #endregion
+    }
+
+    public class ChangeEventArgs : EventArgs
+    {
+        public bool IsVisible { get; set; }
+
+        public ChangeEventArgs()
+        {
+        }
+
+        public ChangeEventArgs(bool isVisible)
+        {
+            IsVisible = isVisible;
+        }
     }
 }
