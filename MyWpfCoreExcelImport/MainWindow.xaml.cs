@@ -229,6 +229,7 @@ namespace MyWpfCoreExcelImport
 
             excelFile = p.ExcelFile;
             SelectedTableIndex = 0;
+            ClearDataSet();
 
             try
             {
@@ -308,7 +309,13 @@ namespace MyWpfCoreExcelImport
         /// <param name="e"></param>
         private void Button_Clear_Click(object sender, RoutedEventArgs e)
         {
+            ClearDataSet();
+        }
+        private void ClearDataSet()
+        {
             _ds?.Clear();
+            _ds = null;
+            TableList?.Clear();
         }
 
         /// <summary>
@@ -382,8 +389,11 @@ namespace MyWpfCoreExcelImport
         /// <param name="e"></param>
         private void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            string text = e.AddedItems[0] as string;
-            int index = (sender as ComboBox).SelectedIndex;
+            string text = "";
+            int index;
+
+            try { text = e.AddedItems[0] as string; } catch { }
+            index = (sender as ComboBox).SelectedIndex;
 
             if (_ds != null && _ds.Tables.Count > 0)
             {
@@ -516,7 +526,8 @@ namespace MyWpfCoreExcelImport
             for(int i=0;i < result.Tables.Count;i++)
                 TableList.Add(result.Tables[i].TableName);
 
-            if(result.Tables.Count > 0)
+            SelectedTableIndex = 0;
+            if (result.Tables.Count > 0)
                 SelectedTable = result.Tables[SelectedTableIndex].TableName;
 
             return result;
