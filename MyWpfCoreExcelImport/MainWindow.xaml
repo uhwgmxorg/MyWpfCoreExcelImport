@@ -15,7 +15,8 @@
         <Label Content="{Binding Message}" ToolTip="Click to clear" VerticalAlignment="Top" Margin="20,19,21,0" Height="29" Background="#FF7A7A7A" MouseDown="Lable_Message_MouseDown" Opacity="0.745" FontWeight="Bold"/>
 
         <Label Content="Connection String" HorizontalAlignment="Left" Margin="10,63,0,0" VerticalAlignment="Top"/>
-        <TextBox Text="{Binding ConnectionString, Source={x:Static p:Settings.Default}}" Margin="120,67,90,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <ComboBox Text="{Binding NewItem, UpdateSourceTrigger=LostFocus}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" ItemsSource="{Binding ItemList}" IsEditable="True"  Margin="120,64,90,0"  VerticalAlignment="Top" KeyDown="ComboBox_KeyDown"/>
+
         <Button Content="Connect" Margin="0,65,10,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Click="Button_Connect_Click"/>
         <Label Content="Excel-File" HorizontalAlignment="Left" Margin="10,88,0,0" VerticalAlignment="Top"/>
 
@@ -33,11 +34,13 @@
 
         <CheckBox Content="Show SQL Help Window" IsChecked="{Binding ShowSQLHelpWindow}" ToolTip="Shows a tool window in which the appropriate SQL CREATE TABLE statement is given" ToolTipService.ShowDuration="0x7FFFFFFF"  HorizontalAlignment="Right" Margin="0,117,14,0" VerticalAlignment="Top"/>
 
-        <DataGrid Name="myDataGrid" ItemsSource="{Binding}" Margin="10,142,90,10"/>
+        <DataGrid Name="myDataGrid" ItemsSource="{Binding}" Margin="10,142,156,10"/>
 
-        <Button Content="Import" HorizontalAlignment="Right" Margin="0,0,10,85" VerticalAlignment="Bottom" Width="75" Click="Button_Import_Click"/>
-        <Button Content="Updated DB" HorizontalAlignment="Right" Margin="0,0,10,60" VerticalAlignment="Bottom" Width="75" Click="Button_UpdatedDB_Click"/>
-        <Button Content="Clear" HorizontalAlignment="Right" Margin="0,0,10,35" VerticalAlignment="Bottom" Width="75" Click="Button_Clear_Click"/>
-        <Button Content="Close" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="75" Click="Button_Close_Click"/>
+        <Button Visibility="Hidden" Content="#1" HorizontalAlignment="Right" Margin="0,0,10,135" VerticalAlignment="Bottom" Width="141" Click="Button_1_Click"/>
+        <Button Content="Add Default Connection" HorizontalAlignment="Right" Margin="0,0,10,110" VerticalAlignment="Bottom" Width="141" Click="Button_AddDefaultConnection_Click"/>
+        <Button Content="Import" HorizontalAlignment="Right" Margin="0,0,10,85" VerticalAlignment="Bottom" Width="141" Click="Button_Import_Click"/>
+        <Button Content="Updated DB" HorizontalAlignment="Right" Margin="0,0,10,60" VerticalAlignment="Bottom" Width="141" Click="Button_UpdatedDB_Click"/>
+        <Button Content="Clear" HorizontalAlignment="Right" Margin="0,0,10,35" VerticalAlignment="Bottom" Width="141" Click="Button_Clear_Click"/>
+        <Button Content="Close" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="141" Click="Button_Close_Click"/>
     </Grid>
 </Window>

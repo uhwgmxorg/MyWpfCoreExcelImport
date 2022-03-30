@@ -1,6 +1,8 @@
 ﻿using ExcelDataReader;
+using MyWpfCoreExcelImport.Tools;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
@@ -9,6 +11,7 @@ using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
+using System.Linq;
 
 namespace MyWpfCoreExcelImport
 {
@@ -20,8 +23,10 @@ namespace MyWpfCoreExcelImport
         public delegate void VisibilityChangeEvent(object sender, ChangeEventArgs e);
         public event PropertyChangedEventHandler PropertyChanged;
 
-        VisibilityChangeEvent _visibilityChangeEvent;
+        private VisibilityChangeEvent _visibilityChangeEvent;
         private Tools.ToolWindow _toolWindow;
+        private DataSet _ds;
+        private string _connectionString;
 
         #region INotify Changed Properties  
         private string message;
@@ -30,6 +35,55 @@ namespace MyWpfCoreExcelImport
             get { return message; }
             set { SetField(ref message, value, nameof(Message)); }
         }
+
+
+        private ObservableCollection<string> itemList;
+        public ObservableCollection<string> ItemList
+        {
+            get { return itemList; }
+            set { SetField(ref this.itemList, value, nameof(ItemList)); }
+        }
+        private string newItem;
+        public string NewItem
+        {
+            get
+            {
+                return newItem;
+            }
+            set
+            {
+                if (newItem != value)
+                {
+                    newItem = value;
+                    var item = ItemList.SingleOrDefault(x => x == newItem);
+                    if (item == null)
+                        ItemList.Insert(0, newItem);
+                    SelectedItem = newItem;
+                }
+            }
+        }
+        private string selectedItem;
+        public string SelectedItem
+        {
+            get
+            {
+                return selectedItem;
+            }
+            set
+            {
+                if (selectedItem != value)
+                {
+                    selectedItem = value;
+                    if (selectedItem == ItemListToXml.DELETE_COMMAND)
+                    {
+                        ItemList.Clear();
+                        ItemList.Add(ItemListToXml.DELETE_COMMAND);
+                    }
+                    SetField(ref this.selectedItem, value, nameof(SelectedItem));
+                }
+            }
+        }
+
         private bool showSQLHelpWindow;
         public bool ShowSQLHelpWindow
         {
@@ -46,8 +100,7 @@ namespace MyWpfCoreExcelImport
         #endregion
 
         SqlConnection Connection { get; set; }
-
-        DataSet _ds;
+        public ItemListToXml ItemListToXml { get; set; }
 
         /// <summary>
         /// Constructor
@@ -57,6 +110,7 @@ namespace MyWpfCoreExcelImport
             InitializeComponent();
 
             DataContext = this;
+            Message = "";
 
 #if DEBUG
             Title += "    Debug Version " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
@@ -67,6 +121,9 @@ namespace MyWpfCoreExcelImport
             Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
             _visibilityChangeEvent = new VisibilityChangeEvent(VisibilityChangeEventHandler);
+
+            ItemListToXml = new ItemListToXml();
+            ItemList = ItemListToXml.Load(ref selectedItem);
         }
 
         /******************************/
@@ -93,6 +150,29 @@ namespace MyWpfCoreExcelImport
         {
             var p = Properties.Settings.Default;
             p.ExcelFile = GetFileFromDialog(p.ExcelFile, "Excel files|*.xlsx|Excel files (*.xls)|*.xls|All files (*.*)|*.*");
+        }
+
+        /// <summary>
+        /// Button_1_Click
+        /// For testing and debugging
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_1_Click(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("Button_1_Click");
+        }
+
+        /// <summary>
+        /// Button_AddDefaultConnection_Click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_AddDefaultConnection_Click(object sender, RoutedEventArgs e)
+        {
+            var p = Properties.Settings.Default;
+            NewItem = p.DefaultConnectionString;
+            Message = "Add default Connection Item to List";
         }
 
         /// <summary>
@@ -181,7 +261,7 @@ namespace MyWpfCoreExcelImport
         /// <param name="e"></param>
         private void Button_Clear_Click(object sender, RoutedEventArgs e)
         {
-            _ds!.Clear();
+            _ds?.Clear();
         }
 
         /// <summary>
@@ -233,6 +313,22 @@ namespace MyWpfCoreExcelImport
         }
 
         /// <summary>
+        /// ComboBox_KeyDown
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ComboBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Return)
+            {
+                string newItemValue = ((System.Windows.Controls.TextBox)e.OriginalSource).Text;
+                var item = ItemList.SingleOrDefault(x => x == newItemValue);
+                if (item == null)
+                    ItemList.Insert(0, newItemValue);
+            }
+        }
+
+        /// <summary>
         /// VisibilityChangeEventHandler
         /// </summary>
         /// <param name="sender"></param>
@@ -253,6 +349,7 @@ namespace MyWpfCoreExcelImport
             Properties.Settings.Default.Save();
             if (_toolWindow != null)
                 _toolWindow.Close();
+            ItemListToXml.Save(SelectedItem, ItemList);
         }
 
         #endregion
@@ -270,8 +367,9 @@ namespace MyWpfCoreExcelImport
 
             try
             {
-                p.DBName = GetDBName(p.ConnectionString);
-                Connection = new SqlConnection(p.ConnectionString);
+                _connectionString = SelectedItem;
+                p.DBName = GetDBName(_connectionString);
+                Connection = new SqlConnection(_connectionString);
                 Connection.Open();
                 Console.Beep();
                 Message = $"Connection to: {Connection!.ConnectionString}  - open";
@@ -280,7 +378,10 @@ namespace MyWpfCoreExcelImport
             {
                 Console.Beep();
                 Console.Beep();
-                Message = $"Connection to: {Connection!.ConnectionString}  - failed";
+                if(Connection != null)
+                    Message = $"Connection to: {Connection!.ConnectionString}  - failed";
+                else
+                    Message = $"Connection to DB  - failed";
                 MessageBox.Show(ex.Message, Title, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -341,7 +442,7 @@ namespace MyWpfCoreExcelImport
             };
 
 
-            p.DBName = GetDBName(p.ConnectionString);
+            p.DBName = GetDBName(_connectionString);
             using FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read);
             using IExcelDataReader reader = ExcelReaderFactory.CreateReader(stream, readerConfiguration);
             result = reader.AsDataSet(dataSetConfiguration);
