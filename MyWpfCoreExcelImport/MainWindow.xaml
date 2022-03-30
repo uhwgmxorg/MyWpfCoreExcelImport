@@ -15,7 +15,7 @@
         <Label Content="{Binding Message}" ToolTip="Click to clear" VerticalAlignment="Top" Margin="20,19,21,0" Height="29" Background="#FF7A7A7A" MouseDown="Lable_Message_MouseDown" Opacity="0.745" FontWeight="Bold"/>
 
         <Label Content="Connection String" HorizontalAlignment="Left" Margin="10,63,0,0" VerticalAlignment="Top"/>
-        <ComboBox Text="{Binding NewItem, UpdateSourceTrigger=LostFocus}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" ItemsSource="{Binding ItemList}" IsEditable="True"  Margin="120,64,90,0"  VerticalAlignment="Top" KeyDown="ComboBox_KeyDown"/>
+        <ComboBox IsEditable="True" Text="{Binding NewItem, UpdateSourceTrigger=LostFocus}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" ItemsSource="{Binding ItemList}" Margin="120,64,90,0"  VerticalAlignment="Top" KeyDown="ComboBox_KeyDown"/>
 
         <Button Content="Connect" Margin="0,65,10,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Click="Button_Connect_Click"/>
         <Label Content="Excel-File" HorizontalAlignment="Left" Margin="10,88,0,0" VerticalAlignment="Top"/>
@@ -26,11 +26,11 @@
         <Label Content="DBName" HorizontalAlignment="Left" Margin="12,112,0,0" VerticalAlignment="Top"/>
         <TextBox Text="{Binding DBName, Source={x:Static p:Settings.Default}}" Margin="120,117,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="139"/>
 
-        <Label Content="Table Name" HorizontalAlignment="Left" Margin="264,110,0,0" VerticalAlignment="Top"/>
-        <TextBox Text="{Binding TableName, Source={x:Static p:Settings.Default}}" Margin="341,115,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="139"/>
+        <Label Content="Table Name" HorizontalAlignment="Left" Margin="264,112,0,0" VerticalAlignment="Top"/>
+        <ComboBox Name="tableComboBox" IsEditable="False" Text="{Binding SelectedComboBoxTableName, Mode=TwoWay}" SelectedIndex="{Binding SelectedTableIndex}" SelectedItem="{Binding SelectedTable, Mode=TwoWay}" ItemsSource="{Binding TableList}" IsSynchronizedWithCurrentItem="True" Margin="341,115,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="139" SelectionChanged="ComboBox_SelectionChanged"/>
 
-        <Label Content="Excel Tab Index" HorizontalAlignment="Left" Margin="485,110,0,0" VerticalAlignment="Top"/>
-        <TextBox Text="{Binding ExcelTabIndex, Source={x:Static p:Settings.Default}}" Margin="580,114,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="34"/>
+        <Label Content="Excel Tab Index" HorizontalAlignment="Left" Margin="485,112,0,0" VerticalAlignment="Top"/>
+        <TextBox IsReadOnly="True" Text="{Binding SelectedTableIndex}" Margin="580,117,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="34"/>
 
         <CheckBox Content="Show SQL Help Window" IsChecked="{Binding ShowSQLHelpWindow}" ToolTip="Shows a tool window in which the appropriate SQL CREATE TABLE statement is given" ToolTipService.ShowDuration="0x7FFFFFFF"  HorizontalAlignment="Right" Margin="0,117,14,0" VerticalAlignment="Top"/>
 

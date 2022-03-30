@@ -12,6 +12,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Linq;
+using System.Windows.Controls;
 
 namespace MyWpfCoreExcelImport
 {
@@ -35,7 +36,6 @@ namespace MyWpfCoreExcelImport
             get { return message; }
             set { SetField(ref message, value, nameof(Message)); }
         }
-
 
         private ObservableCollection<string> itemList;
         public ObservableCollection<string> ItemList
@@ -97,6 +97,46 @@ namespace MyWpfCoreExcelImport
                 SetField(ref showSQLHelpWindow, value, nameof(ShowSQLHelpWindow));
             }
         }
+
+        private ObservableCollection<string> tableList;
+        public ObservableCollection<string> TableList
+        {
+            get { return tableList; }
+            set { SetField(ref this.tableList, value, nameof(TableList)); }
+        }
+        private string selectedComboBoxTableName;
+        public string SelectedComboBoxTableName
+        {
+            get { return selectedComboBoxTableName; }
+            set { SetField(ref selectedComboBoxTableName, value, nameof(SelectedComboBoxTableName)); }
+        }
+        private int selectedTableIndex;
+        public int SelectedTableIndex
+        {
+            get { return selectedTableIndex; }
+            set { SetField(ref selectedTableIndex, value, nameof(SelectedTableIndex)); }
+        }
+        private string selectedTable;
+        public string SelectedTable
+        {
+            get
+            {
+                return selectedTable;
+            }
+            set
+            {
+                if (selectedTable != value)
+                {
+                    selectedTable = value;
+                    if (selectedTable == ItemListToXml.DELETE_COMMAND)
+                    {
+                        TableList.Clear();
+                        TableList.Add(ItemListToXml.DELETE_COMMAND);
+                    }
+                    SetField(ref this.selectedTable, value, nameof(SelectedTable));
+                }
+            }
+        }
         #endregion
 
         SqlConnection Connection { get; set; }
@@ -124,6 +164,8 @@ namespace MyWpfCoreExcelImport
 
             ItemListToXml = new ItemListToXml();
             ItemList = ItemListToXml.Load(ref selectedItem);
+
+            TableList = new ObservableCollection<string>();
         }
 
         /******************************/
@@ -186,15 +228,20 @@ namespace MyWpfCoreExcelImport
             var p = Properties.Settings.Default;
 
             excelFile = p.ExcelFile;
+            SelectedTableIndex = 0;
 
             try
             {
                 DataSet ds = ReadExcelFile(excelFile);
                 _ds = ds;
-                myDataGrid.DataContext = _ds.Tables[0];
-                String createTableStatment = CreateTABLE(ds.Tables[0]);
-                _toolWindow!.CreateTableStatment = createTableStatment;
-                Debug.WriteLine(createTableStatment);
+                if (_ds?.Tables.Count > 0)
+                {
+                    SelectedComboBoxTableName = _ds.Tables[SelectedTableIndex].TableName;
+                    myDataGrid.DataContext = _ds.Tables[SelectedTableIndex];
+                    String createTableStatment = CreateTABLE(_ds.Tables[SelectedTableIndex]);
+                    _toolWindow!.CreateTableStatment = createTableStatment;
+                    Debug.WriteLine(createTableStatment);
+                }
             }
             catch (Exception ex)
             {
@@ -247,10 +294,10 @@ namespace MyWpfCoreExcelImport
                 return;
             }
 
-            Message = $"Database updated {_ds.Tables[0].Rows.Count} Rows added";
+            Message = $"Database updated {_ds.Tables[SelectedTableIndex].Rows.Count} Rows added";
             Console.Beep();
 
-            String createTableStatment = CreateTABLE(_ds.Tables[0]);
+            String createTableStatment = CreateTABLE(_ds.Tables[SelectedTableIndex]);
             Debug.WriteLine(createTableStatment);
         }
 
@@ -326,6 +373,25 @@ namespace MyWpfCoreExcelImport
                 if (item == null)
                     ItemList.Insert(0, newItemValue);
             }
+        }
+
+        /// <summary>
+        /// ComboBox_SelectionChanged
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            string text = e.AddedItems[0] as string;
+            int index = (sender as ComboBox).SelectedIndex;
+
+            if (_ds != null && _ds.Tables.Count > 0)
+            {
+                myDataGrid.DataContext = _ds.Tables[index];
+                _toolWindow!.CreateTableStatment = CreateTABLE(_ds.Tables[SelectedTableIndex]);
+            }
+
+            Debug.WriteLine($"ComboBox_SelectionChanged text={text} index={index}");
         }
 
         /// <summary>
@@ -447,6 +513,12 @@ namespace MyWpfCoreExcelImport
             using IExcelDataReader reader = ExcelReaderFactory.CreateReader(stream, readerConfiguration);
             result = reader.AsDataSet(dataSetConfiguration);
 
+            for(int i=0;i < result.Tables.Count;i++)
+                TableList.Add(result.Tables[i].TableName);
+
+            if(result.Tables.Count > 0)
+                SelectedTable = result.Tables[SelectedTableIndex].TableName;
+
             return result;
         }
 
@@ -461,15 +533,15 @@ namespace MyWpfCoreExcelImport
             try
             {
                 SqlBulkCopy bulkCopy = new SqlBulkCopy(Connection, SqlBulkCopyOptions.TableLock | SqlBulkCopyOptions.FireTriggers | SqlBulkCopyOptions.UseInternalTransaction, null);
-                bulkCopy.DestinationTableName = ds.Tables[0].TableName;
-                bulkCopy.WriteToServer(ds.Tables[0]);
-                Message = $"Updating data in table {0} ds.Tables[0].TableName Success";
+                bulkCopy.DestinationTableName = ds.Tables[SelectedTableIndex].TableName;
+                bulkCopy.WriteToServer(ds.Tables[SelectedTableIndex]);
+                Message = $"Updating data in table {0} ds.Tables[SelectedTableIndex].TableName Success";
 
                 return true;
             }
             catch (Exception ex)
             {
-                Message = $"Failed to update table {0}. Error {1} ds.Tables[0].TableName, ex Failed";
+                Message = $"Failed to update table {0}. Error {1} ds.Tables[SelectedTableIndex].TableName, ex Failed";
                 Debug.WriteLine(ex.ToString());
 
                 return false;
