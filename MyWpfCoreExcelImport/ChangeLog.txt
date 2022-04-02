@@ -1,0 +1,36 @@
+﻿
+    ChangeLog MyWpfCoreExcelImport
+
+
+    Version 1.2.3.0 02.04.2022 
+    
+    - Add CahngeLogtxt and ChangeLogCoreUtilityDll 
+      (Porting of ChangeLogUtilityDll 
+      https://uhwgmxorg.wordpress.com/2015/04/22/mychangelogutility/
+      to .Net Core/5/6)
+
+
+    Version 1.2.2.1 30.03.2022 
+    
+    - Improving Table ComboBox mechanism.
+
+
+    Version 1.2.2.0 30.03.2022
+    
+    -  Add Table ComboBox 
+
+
+    Version 1.2.1.0 30.03.2022
+    
+    -  Add ComboBox for connection string.
+
+
+    Version Version 1.1.0.0 17.03.2022
+    
+    - Add ExcelTabIndex
+    - DBName and copy to clipboard in ToolWindow.
+
+
+    Version 1.0.0.0 14.03.2022
+    
+    - Start

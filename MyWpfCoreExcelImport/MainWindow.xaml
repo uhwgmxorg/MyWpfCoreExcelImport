@@ -36,7 +36,7 @@
 
         <DataGrid Name="myDataGrid" ItemsSource="{Binding}" Margin="10,142,156,10"/>
 
-        <Button Content="#1" Visibility="Hidden" HorizontalAlignment="Right" Margin="0,0,10,135" VerticalAlignment="Bottom" Width="141" Click="Button_1_Click"/>
+        <Button Content="#1" Visibility="Visible" ToolTip="For testing and debugging..." ToolTipService.ShowDuration="0x7FFFFFFF" HorizontalAlignment="Right" Margin="0,0,10,135" VerticalAlignment="Bottom" Width="141" Click="Button_1_Click"/>
         <Button Content="Add Default Connection" HorizontalAlignment="Right" Margin="0,0,10,110" VerticalAlignment="Bottom" Width="141" Click="Button_AddDefaultConnection_Click"/>
         <Button Content="Import" HorizontalAlignment="Right" Margin="0,0,10,85" VerticalAlignment="Bottom" Width="141" Click="Button_Import_Click"/>
         <Button Content="Updated DB" HorizontalAlignment="Right" Margin="0,0,10,60" VerticalAlignment="Bottom" Width="141" Click="Button_UpdatedDB_Click"/>

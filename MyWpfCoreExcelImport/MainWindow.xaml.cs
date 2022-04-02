@@ -203,6 +203,9 @@ namespace MyWpfCoreExcelImport
         private void Button_1_Click(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine("Button_1_Click");
+
+            ChangeLogCoreUtilityDll.ChangeLogTxtToolWindow ChangeLogTxtToolWindow = new ChangeLogCoreUtilityDll.ChangeLogTxtToolWindow(this);
+            ChangeLogTxtToolWindow.ShowChangeLogWindow("ChangeLog.txt");
         }
 
         /// <summary>
