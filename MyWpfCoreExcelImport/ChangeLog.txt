@@ -2,6 +2,13 @@
     ChangeLog MyWpfCoreExcelImport
 
 
+    Version 1.2.4.0 02.07.2022 
+    
+    - Added some ToolTips for better 
+      operation and understanding.
+    - Add an icon
+
+
     Version 1.2.3.0 02.04.2022 
     
     - Add CahngeLogtxt and ChangeLogCoreUtilityDll 

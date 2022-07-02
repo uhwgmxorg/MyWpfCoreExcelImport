@@ -6,21 +6,28 @@
     <Nullable>disable</Nullable>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
-    <AssemblyVersion>1.2.3.0</AssemblyVersion>
-    <FileVersion>1.2.3.0</FileVersion>
+    <AssemblyVersion>1.2.4.0</AssemblyVersion>
+    <FileVersion>1.2.4.0</FileVersion>
+    <ApplicationIcon>Resource\icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Resource\copy.png" />
     <None Remove="Resource\eraser.png" />
     <None Remove="Resource\history.png" />
+    <None Remove="Resource\icon.ico" />
     <None Remove="Resource\paste.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resource\icon.ico" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Resource\copy.png" />
     <Resource Include="Resource\eraser.png" />
     <Resource Include="Resource\history.png" />
+    <Resource Include="Resource\icon.ico" />
     <Resource Include="Resource\paste.png" />
   </ItemGroup>
 

@@ -17,30 +17,79 @@
         <Label Content="Connection String" HorizontalAlignment="Left" Margin="10,63,0,0" VerticalAlignment="Top"/>
         <ComboBox IsEditable="True" Text="{Binding NewItem, UpdateSourceTrigger=LostFocus}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" ItemsSource="{Binding ItemList}" Margin="120,64,90,0"  VerticalAlignment="Top" KeyDown="ComboBox_KeyDown"/>
 
-        <Button Content="Connect" Margin="0,65,10,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Click="Button_Connect_Click"/>
+        <Button Content="Connect" ToolTipService.ShowDuration="0x7FFFFFFF" Margin="0,65,10,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Click="Button_Connect_Click">
+            <Button.ToolTip>
+                <TextBlock>
+                Connect to the database with the selected connection string
+                <LineBreak/>
+                    <Run Text="Hint:" FontWeight="Bold"></Run>
+                <LineBreak/>
+                The connection is attempted to be established as soon as the program starts.
+                <LineBreak/>
+                One beep is heard when the connection is established, 
+                <LineBreak/>
+                two when the attempt fails.
+                </TextBlock>
+            </Button.ToolTip>
+        </Button>
         <Label Content="Excel-File" HorizontalAlignment="Left" Margin="10,88,0,0" VerticalAlignment="Top"/>
 
         <TextBox Text="{Binding ExcelFile, Source={x:Static p:Settings.Default}}" Margin="120,92,90,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <Button Content="..." Margin="0,90,10,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Click="Button_SetExcelFile_Click"/>
+        <Button Content="..." ToolTip="Select the desired Excel-File" ToolTipService.ShowDuration="0x7FFFFFFF" Margin="0,90,10,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Click="Button_SetExcelFile_Click"/>
 
         <Label Content="DBName" HorizontalAlignment="Left" Margin="12,112,0,0" VerticalAlignment="Top"/>
-        <TextBox Text="{Binding DBName, Source={x:Static p:Settings.Default}}" Margin="120,117,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="139"/>
+        <TextBox Text="{Binding DBName, Source={x:Static p:Settings.Default}}" ToolTipService.ShowDuration="0x7FFFFFFF" Margin="120,117,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="139">
+            <TextBox.ToolTip>
+                <ToolTip>
+                    <TextBlock>
+                        Table name shown in the SQL Help Window,
+                        <LineBreak/>
+                        default identifier is the Excel-Tab-Name.
+                        <LineBreak/>
+                        Changebal here if the name does not follow 
+                        <LineBreak/>
+                        the SQL table naming convention.
+                    </TextBlock>
+                </ToolTip>
+            </TextBox.ToolTip>
+        </TextBox>
 
         <Label Content="Table Name" HorizontalAlignment="Left" Margin="264,112,0,0" VerticalAlignment="Top"/>
-        <ComboBox Name="tableComboBox" IsEditable="False" Text="{Binding SelectedComboBoxTableName, Mode=TwoWay}" SelectedIndex="{Binding SelectedTableIndex}" SelectedItem="{Binding SelectedTable, Mode=TwoWay}" ItemsSource="{Binding TableList}" IsSynchronizedWithCurrentItem="True" Margin="341,115,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="139" SelectionChanged="ComboBox_SelectionChanged"/>
+        <ComboBox Name="tableComboBox" ToolTip="List of Tabs in the Excel-List" ToolTipService.ShowDuration="0x7FFFFFFF" IsEditable="False" Text="{Binding SelectedComboBoxTableName, Mode=TwoWay}" SelectedIndex="{Binding SelectedTableIndex}" SelectedItem="{Binding SelectedTable, Mode=TwoWay}" ItemsSource="{Binding TableList}" IsSynchronizedWithCurrentItem="True" Margin="341,115,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="139" SelectionChanged="ComboBox_SelectionChanged"/>
 
         <Label Content="Excel Tab Index" HorizontalAlignment="Left" Margin="485,112,0,0" VerticalAlignment="Top"/>
-        <TextBox IsReadOnly="True" Text="{Binding SelectedTableIndex}" Margin="580,117,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="34"/>
+        <TextBox IsReadOnly="True" Text="{Binding SelectedTableIndex}" ToolTip="The Tab-Index of the Excel-Files starting at 0" ToolTipService.ShowDuration="0x7FFFFFFF" ToolTipService.ShowOnDisabled="True" Margin="580,117,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="34" IsEnabled="False"/>
 
         <CheckBox Content="Show SQL Help Window" IsChecked="{Binding ShowSQLHelpWindow}" ToolTip="Shows a tool window in which the appropriate SQL CREATE TABLE statement is given" ToolTipService.ShowDuration="0x7FFFFFFF"  HorizontalAlignment="Right" Margin="0,117,14,0" VerticalAlignment="Top"/>
 
+        <Label x:Name="label" HorizontalAlignment="Right" Margin="0,0,19,196" VerticalAlignment="Bottom" Height="56" Width="123">
+            <Label.Content>
+                <TextBlock TextWrapping="Wrap" >
+                    <Run Text="Hint:" FontWeight="Bold"></Run>
+                <LineBreak/>
+                    See the ToolTips for further hints
+                </TextBlock>
+            </Label.Content>
+        </Label>
+
         <DataGrid Name="myDataGrid" ItemsSource="{Binding}" Margin="10,142,156,10"/>
 
-        <Button Content="#1" Visibility="Visible" ToolTip="For testing and debugging..." ToolTipService.ShowDuration="0x7FFFFFFF" HorizontalAlignment="Right" Margin="0,0,10,135" VerticalAlignment="Bottom" Width="141" Click="Button_1_Click"/>
-        <Button Content="Add Default Connection" HorizontalAlignment="Right" Margin="0,0,10,110" VerticalAlignment="Bottom" Width="141" Click="Button_AddDefaultConnection_Click"/>
-        <Button Content="Import" HorizontalAlignment="Right" Margin="0,0,10,85" VerticalAlignment="Bottom" Width="141" Click="Button_Import_Click"/>
-        <Button Content="Updated DB" HorizontalAlignment="Right" Margin="0,0,10,60" VerticalAlignment="Bottom" Width="141" Click="Button_UpdatedDB_Click"/>
-        <Button Content="Clear" HorizontalAlignment="Right" Margin="0,0,10,35" VerticalAlignment="Bottom" Width="141" Click="Button_Clear_Click"/>
-        <Button Content="Close" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="141" Click="Button_Close_Click"/>
+        <Button Content="#1" Visibility="Visible" ToolTip="For testing and debugging..." ToolTipService.ShowDuration="0x7FFFFFFF" HorizontalAlignment="Right" Margin="0,0,10,160" VerticalAlignment="Bottom" Width="141" Click="Button_1_Click"/>
+        <Button Content="View ChangeLog" Visibility="Visible" ToolTip="View the Change Log" ToolTipService.ShowDuration="0x7FFFFFFF" HorizontalAlignment="Right" Margin="0,0,10,135" VerticalAlignment="Bottom" Width="141" Click="Button_ChangeLog_Click"/>
+        <Button Content="Add Default Connection" ToolTip="Load the default connection string, defined in the Settings, into the Connection String ComboBox" ToolTipService.ShowDuration="0x7FFFFFFF" HorizontalAlignment="Right" Margin="0,0,10,110" VerticalAlignment="Bottom" Width="141" Click="Button_AddDefaultConnection_Click"/>
+        <Button Content="Import" ToolTipService.ShowDuration="0x7FFFFFFF" HorizontalAlignment="Right" Margin="0,0,10,85" VerticalAlignment="Bottom" Width="141" Click="Button_Import_Click">
+            <Button.ToolTip>
+                <ToolTip>
+                    <TextBlock>
+                        Open the Excel-File and insert the data into the 
+                        <LineBreak/>
+                        DataSet/DataGrid and create the SQL-Statement in the SQL Help Window.
+                    </TextBlock>
+                </ToolTip>
+            </Button.ToolTip>
+        </Button>
+        <Button Content="Updated DB" ToolTip="Insert the DataGrid data in the database" ToolTipService.ShowDuration="0x7FFFFFFF" HorizontalAlignment="Right" Margin="0,0,10,60" VerticalAlignment="Bottom" Width="141" Click="Button_UpdatedDB_Click"/>
+        <Button Content="Clear" ToolTip="Clear the DataSet/DataGrid" ToolTipService.ShowDuration="0x7FFFFFFF" HorizontalAlignment="Right" Margin="0,0,10,35" VerticalAlignment="Bottom" Width="141" Click="Button_Clear_Click"/>
+        <Button Content="Close" ToolTip="Close the application" ToolTipService.ShowDuration="0x7FFFFFFF" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="141" Click="Button_Close_Click"/>
     </Grid>
 </Window>

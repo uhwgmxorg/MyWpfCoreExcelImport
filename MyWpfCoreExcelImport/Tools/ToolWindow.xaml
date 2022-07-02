@@ -5,14 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MyWpfCoreExcelImport.Tools"
         mc:Ignorable="d"
-        Title="ToolWindow" Height="220" Width="400" Closing="Window_Closing" IsVisibleChanged="Window_IsVisibleChanged">
+        Title="ToolWindow - SQL Help Window" Height="220" Width="400" Closing="Window_Closing" IsVisibleChanged="Window_IsVisibleChanged">
     <Grid>
-        <TextBox Text="{Binding CreateTableStatment}" IsEnabled="True" IsReadOnly="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" TextWrapping="NoWrap" Margin="10,10,10,30" FontSize="11" FontFamily="Curier"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="39*"/>
+            <ColumnDefinition Width="161*"/>
+        </Grid.ColumnDefinitions>
+        <TextBox Text="{Binding CreateTableStatment}" IsEnabled="True" IsReadOnly="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" TextWrapping="NoWrap" Margin="10,10,10,30" FontSize="11" FontFamily="Curier" Grid.ColumnSpan="2"/>
         <Button ToolTip="Copy Create Table Statment to Clipboard" ToolTipService.ShowDuration="0x7FFFFFFF" HorizontalAlignment="Left" Margin="10,0,0,3" Click="Button_CopyCreateTableStatment_Click" Width="24" Height="24" VerticalAlignment="Bottom" >
             <StackPanel>
                 <Image Source="pack://application:,,,/Resource/copy.png" />
             </StackPanel>
         </Button>
-        <Button Content="Close" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="44" Height="15" Click="Button_Click_Close" FontSize="9"/>
+        <Button ToolTip="Clear the SQL Help Window content" ToolTipService.ShowDuration="0x7FFFFFFF" HorizontalAlignment="Left" Margin="39,0,0,3" Click="Button_DeleteCreateTableStatment_Click" Width="24" Height="24" VerticalAlignment="Bottom" >
+            <StackPanel>
+                <Image Source="pack://application:,,,/Resource/eraser.png" />
+            </StackPanel>
+        </Button>
+        <Button Content="Close" ToolTip="Close the SQL Help Window" ToolTipService.ShowDuration="0x7FFFFFFF" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="44" Height="15" Click="Button_Click_Close" FontSize="9" Grid.Column="1"/>
     </Grid>
 </Window>

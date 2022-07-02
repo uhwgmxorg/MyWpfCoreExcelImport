@@ -57,6 +57,16 @@ namespace MyWpfCoreExcelImport.Tools
         }
 
         /// <summary>
+        /// Button_DeleteCreateTableStatment_Click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_DeleteCreateTableStatment_Click(object sender, RoutedEventArgs e)
+        {
+            CreateTableStatment = "";
+        }
+
+        /// <summary>
         /// Button_Click_Close
         /// </summary>
         /// <param name="sender"></param>

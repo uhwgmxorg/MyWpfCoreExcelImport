@@ -18,6 +18,10 @@ namespace MyWpfCoreExcelImport
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
+    /// we need:
+    /// Install-Package ExcelDataReader
+    /// Install-Package ExcelDataReader.DataSet
+    /// Install-Package System.Data.SqlClient
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
@@ -203,9 +207,22 @@ namespace MyWpfCoreExcelImport
         private void Button_1_Click(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine("Button_1_Click");
+            Console.Beep();
+            Message = "You pressed Button #1 Beep :)";
+        }
+
+        /// <summary>
+        /// Button_ChangeLog_Click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_ChangeLog_Click(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("Button_1_Click");
 
             ChangeLogCoreUtilityDll.ChangeLogTxtToolWindow ChangeLogTxtToolWindow = new ChangeLogCoreUtilityDll.ChangeLogTxtToolWindow(this);
             ChangeLogTxtToolWindow.ShowChangeLogWindow("ChangeLog.txt");
+            Message = "ChangeLog";
         }
 
         /// <summary>
