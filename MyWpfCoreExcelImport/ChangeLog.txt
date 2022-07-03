@@ -2,6 +2,12 @@
     ChangeLog MyWpfCoreExcelImport
 
 
+    Version 1.2.5.0 03.07.2022 
+    
+    - Version 1.2.5.0 Add DefaultConnectionString2 
+      for more convince.
+
+
     Version 1.2.4.0 02.07.2022 
     
     - Added some ToolTips for better 

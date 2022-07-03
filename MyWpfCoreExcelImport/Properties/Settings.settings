@@ -17,5 +17,8 @@
     <Setting Name="ExcelTabIndex" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="DefaultConnectionString2" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Server = .; Database = TestDB; Trusted_Connection = true</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -13,6 +13,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Linq;
 using System.Windows.Controls;
+using System.Threading.Tasks;
 
 namespace MyWpfCoreExcelImport
 {
@@ -183,7 +184,7 @@ namespace MyWpfCoreExcelImport
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Button_Connect_Click(object sender, RoutedEventArgs e)
-        {
+        {   
             ConnectToDB();
         }
 
@@ -234,7 +235,8 @@ namespace MyWpfCoreExcelImport
         {
             var p = Properties.Settings.Default;
             NewItem = p.DefaultConnectionString;
-            Message = "Add default Connection Item to List";
+            NewItem = p.DefaultConnectionString2;
+            Message = "Add default Connection Items to List";
         }
 
         /// <summary>
